@@ -1,8 +1,8 @@
-# Django Heroku S3 Template
+# Django Heroku GCP Template
 
-Template for websites built using Django and deployed on Heroku and AWS S3. This solution is great because Heroku has a [perpetual free tier](https://www.heroku.com/pricing) (albeit with numerous limitations) and AWS S3 is also free up to 5GB ([but only for the first year](https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc)), meaning you can deploy your entire Django project at virtually zero cost.
+Template for websites built using Django and deployed on Heroku and GCP Storage. This solution is great because Heroku has a [perpetual free tier](https://www.heroku.com/pricing) (albeit with numerous limitations) and GCP Storage is also free up to 5GB ([perpetually](https://cloud.google.com/free/)), meaning you can deploy your entire Django project at literally zero cost.
 
-AWS S3 is necessary for handling user uploads and adding static files because Heroku has an [emphemeral file system](https://devcenter.heroku.com/articles/dynos#ephemeral-filesystem). This template project uses PostgreSQL as its database as it is highly scalable and integrates with Heroku very easily (and for [free](https://elements.heroku.com/addons/heroku-postgresql)!).
+GCP Storage is necessary for handling user uploads and adding static files because Heroku has an [emphemeral file system](https://devcenter.heroku.com/articles/dynos#ephemeral-filesystem). This template project uses PostgreSQL as its database as it is highly scalable and integrates with Heroku very easily (and for [free](https://elements.heroku.com/addons/heroku-postgresql)!).
 
 ## Requirements
 
@@ -177,7 +177,7 @@ to install our dependencies.
 
 ### Using `python-dotenv` for Local Development
 
-This package allows you to load variables into our Django project as environment variables so that it will stay out of source control. This is particularly important for Django projects in two places: the `SECRET_KEY` in `settings.py`, our AWS keys, and our database's password, also stored in `settings.py`.
+This package allows you to load variables into our Django project as environment variables so that it will stay out of source control. This is particularly important for Django projects in two places: the `SECRET_KEY` in `settings.py`, our GCP keys, and our database's password, also stored in `settings.py`.
 
 The way it works is simple: we just create a file `.env` within our project (which will store our sensitive data), and now we'll be able to import it anywhere within the project and load our environment variables. We just have to make sure **not** to add `.env` to source control!
 To begin, create an empty `.env` file in the same folder where our `settings.py` is using the `touch` command:
@@ -225,14 +225,13 @@ from dotenv import load_dotenv
 load_dotenv()
 ```
 
-At this point, parsed key-value pairs from the `.env` file is now present as system environment variables and they can be conveniently accessed via the method `os.getenv()`. Generate a `SECRET_KEY` value using [this generator](https://www.miniwebtool.com/django-secret-key-generator/) and copy the value of `SECRET_KEY` in `settings.py` and add it to `.env` like so, along with your PostgreSQL database password and AWS Keys:
+At this point, parsed key-value pairs from the `.env` file is now present as system environment variables and they can be conveniently accessed via the method `os.getenv()`. Generate a `SECRET_KEY` value using [this generator](https://www.miniwebtool.com/django-secret-key-generator/) and copy the value of `SECRET_KEY` in `settings.py` and add it to `.env` like so, along with your PostgreSQL database password and GCP Keys:
 
 ```text
 SECRET_KEY=YOURSECRETKEY
 DB_PASSWORD=YOURDBPASSWORD
-AWS_ACCESS_KEY_ID=YOURAWSACCESSKEYID
-AWS_SECRET_ACCESS_KEY=YOURAWSSECRETACCESSKEY
-S3_BUCKET=NAMEOFYOURAWSS3BUCKET
+GOOGLE_APPLICATION_CREDENTIALS=PATHTOGSCREDENTIALS
+GS_BUCKET_NAME=NAMEOFYOURGSBUCKET
 ```
 
 Note how there are **no spaces** around the equal signs and there are **no quotation marks** for the variable values. When you deploy to Heroku, you'll define them in the Config Vars section in the project's Settings tab instead.
