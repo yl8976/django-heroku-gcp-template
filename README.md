@@ -1,5 +1,7 @@
 # Django Heroku GCP Template
 
+## NOTE: This is still under development. The template does *not* work as of right now.
+
 Template for websites built using Django and deployed on Heroku and GCP Storage. This solution is great because Heroku has a [perpetual free tier](https://www.heroku.com/pricing) (albeit with numerous limitations) and GCP Storage is also free up to 5GB ([perpetually](https://cloud.google.com/free/)), meaning you can deploy your entire Django project at literally zero cost.
 
 GCP Storage is necessary for handling user uploads and adding static files because Heroku has an [emphemeral file system](https://devcenter.heroku.com/articles/dynos#ephemeral-filesystem). This template project uses PostgreSQL as its database as it is highly scalable and integrates with Heroku very easily (and for [free](https://elements.heroku.com/addons/heroku-postgresql)!).
