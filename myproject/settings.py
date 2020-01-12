@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from google.oauth2 import service_account
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -149,20 +150,28 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'myproject/static'),
 ]
 
-# AWS S3 configuration for production
+# GCS Storage configuration for production
 if not DEBUG:
-    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID', os.getenv('AWS_ACCESS_KEY_ID'))
-    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY', os.getenv('AWS_SECRET_ACCESS_KEY'))
-    AWS_STORAGE_BUCKET_NAME = os.environ.get('S3_BUCKET', os.getenv('S3_BUCKET'))
-    AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-    AWS_S3_OBJECT_PARAMETERS = {
-        'CacheControl': 'max-age=86400',
-    }
-    AWS_LOCATION = 'static'
-    AWS_DEFAULT_ACL = None
+    GS_PROJECT_ID = os.environ.get('GS_PROJECT_ID', os.getenv('GS_PROJECT_ID'))
+    GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+        "path/to/credentials.json"
+    )
+    # AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY', os.getenv('AWS_SECRET_ACCESS_KEY'))
+    # AWS_STORAGE_BUCKET_NAME = os.environ.get('S3_BUCKET', os.getenv('S3_BUCKET'))
+    # AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+    # AWS_S3_OBJECT_PARAMETERS = {
+    #     'CacheControl': 'max-age=86400',
+    # }
+    # AWS_LOCATION = 'static'
+    GS_DEFAULT_ACL = None
 
-    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    DEFAULT_FILE_STORAGE = 'bchouseproject.storage_backends.MediaStorage'
-    STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+    GS_BUCKET_NAME = os.environ.get('GS_BUCKET', os.getenv('GS_BUCKET'))
+    DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
     
     ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
+
+    GS_PROJECT_ID = 'pastpack'
+    GS_MEDIA_BUCKET_NAME = 'pastpackgs'
+    GS_STATIC_BUCKET_NAME = 'pastpackgs'
+    STATIC_URL = 'https://storage.googleapis.com/{}/'.format(GS_STATIC_BUCKET_NAME)
+    MEDIA_URL = 'https://storage.googleapis.com/{}/'.format(GS_MEDIA_BUCKET_NAME)
